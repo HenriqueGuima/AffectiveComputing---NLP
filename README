@@ -4,6 +4,10 @@ python -m venv venv
 source venv/bin/activate
 
 ### INSTALL PACKAGES ###
+pip install -r requirements.txt
+
+#OR 
+
 pip install spacy nltk scikit-learn numpy pandas librosa vosk rapidfuzz transformers torch
 
 ### INSTALL PT MODEL ###
