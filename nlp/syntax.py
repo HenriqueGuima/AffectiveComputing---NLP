@@ -2,6 +2,10 @@ import spacy
 
 _nlp = spacy.load("pt_core_news_lg")
 
+def parse(text):
+    """Return a spaCy Doc for the given text (used by main, negation, semantics)."""
+    return _nlp(text)
+
 def analyze_syntax(text):
     doc = _nlp(text)
 
