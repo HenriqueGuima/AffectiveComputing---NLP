@@ -1,13 +1,28 @@
 import spacy
 
-_nlp = spacy.load("pt_core_news_lg")
+_nlp = None
+
+def _ensure_nlp():
+    global _nlp
+    if _nlp is None:
+        try:
+            _nlp = spacy.load("pt_core_news_lg")
+        except Exception:
+            try:
+                _nlp = spacy.load("pt_core_news_sm")
+            except Exception:
+                _nlp = spacy.blank("pt")
+    return _nlp
+
 
 def parse(text):
     """Return a spaCy Doc for the given text (used by main, negation, semantics)."""
-    return _nlp(text)
+    return _ensure_nlp()(text)
+
 
 def analyze_syntax(text):
-    doc = _nlp(text)
+    nlp = _ensure_nlp()
+    doc = nlp(text)
 
     return {
         "tokens": [token.text for token in doc],
