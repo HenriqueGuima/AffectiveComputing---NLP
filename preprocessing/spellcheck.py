@@ -3,7 +3,7 @@ from spellchecker import SpellChecker
 spell = SpellChecker(language="pt")
 
 def correct_text(text):
-    words = text.split()
+    words           = text.split()
     corrected_words = []
 
     for word in words:
