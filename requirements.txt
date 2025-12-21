@@ -1,0 +1,10 @@
+spacy 
+nltk 
+scikit-learn 
+numpy 
+pandas 
+librosa 
+vosk 
+rapidfuzz 
+transformers 
+torch
