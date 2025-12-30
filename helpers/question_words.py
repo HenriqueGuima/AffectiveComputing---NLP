@@ -9,4 +9,4 @@ QUESTION_WORDS = {
     "como",
     "qual",
     "quais"
-} 
+}
