@@ -4,7 +4,9 @@ from nlp.negation import has_negation
 from nlp.semantics import is_personal
 from nlp.type import detect_type
 
-from core.text_input import get_text_input
+#from core.text_input import get_text_input
+from core.audio_input import get_text_input
+
 from core.result import empty_result
 
 def main():

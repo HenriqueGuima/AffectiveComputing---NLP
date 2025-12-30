@@ -9,3 +9,4 @@ rapidfuzz
 transformers 
 torch
 pyspellchecker
+vosk
