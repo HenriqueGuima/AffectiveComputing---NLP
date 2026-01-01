@@ -48,17 +48,32 @@ def get_audio_input():
 
 
 def get_text_input():
-    print("\n------------")
-    print("1. Digitar texto (Teclado)")
+    print("\n\n------------\n")
+    print("1. Introduzir texto (Teclado)")
     print("2. Falar (Microfone)")
-    
-    opcao = input("Escolha uma opção (1 ou 2): ").strip()
-    
-    if opcao == '2':
-        resultado = get_audio_input()
-        # Se falhar a voz, cai para o teclado como backup
-        if not resultado:
-            return input("Falha na voz. Introduza via teclado: ")
-        return resultado
-    else:
-        return input("Introduza uma frase: ")
+    print("\n\nIntroduzir ':q' para sair.")
+    print("\n------------\n")
+
+    while True:
+        opcao = input("Escolha uma opção (1 ou 2): ").strip().lower()
+
+        # Permitir saída direta pelo menu
+        if opcao in {":q", "q"}:
+            return ":q", 'keyboard'
+
+        # Re-pedir se não for dígito
+        if not opcao.isdigit():
+            print("Opção inválida. Por favor, introduza 1 ou 2.")
+            continue
+
+        if opcao == '2':
+            resultado = get_audio_input()
+            # Se falhar a voz, cai para o teclado como backup
+            if not resultado:
+                return input("\n\nFalha na voz. Introduza via teclado: "), 'keyboard'
+            return resultado, 'microfone'
+        elif opcao == '1':
+            return input("Introduza uma frase: "), 'keyboard'
+        else:
+            print("Opção inválida. Por favor, escolha 1 ou 2.")
+            continue

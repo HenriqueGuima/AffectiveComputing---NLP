@@ -3,30 +3,59 @@ from nlp.syntax import parse
 from nlp.negation import has_negation
 from nlp.semantics import is_personal
 from nlp.type import detect_type
+from nlp.sentiment import analyze_sentiment
 
-#from core.text_input import get_text_input
 from core.audio_input import get_text_input
-
 from core.result import empty_result
 
 def main():
-    result = empty_result()
+    first_run = True
+    while True:
+        result = empty_result()
 
-    text = get_text_input()
-    result["frase_original"] = text
+        if not first_run:
+            resposta = input("\n\nDeseja continuar? (s/n): ").strip().lower()
+            if resposta in {"n", "nao", "não", ":q", "q"}:
+                print("\n A sair...\n")
+                break
 
-    corrected = correct_text(text)
-    result["frase_corrigida"] = corrected
-    
-    doc = parse(corrected)
+        first_run = False
 
-    result["negacao"] = has_negation(doc)
-    result["pessoal"] = is_personal(doc)
-    result["tipo"] = detect_type(result["frase_corrigida"], result["negacao"])
+        text, source = get_text_input()
 
-    print("\n--- RESULTADO ---")
-    for key, value in result.items():
-        print(f"{key}: {value}")
+        if isinstance(text, str) and text.strip() == ':q' or (not text):
+            print("\n A sair...\n")
+            break
+
+        result["frase_original"] = text
+
+        corrected = correct_text(text)
+        result["frase_corrigida"] = corrected
+        
+        doc = parse(corrected)
+
+        result["negacao"] = has_negation(doc)
+        result["pessoal"] = is_personal(doc)
+        result["tipo"] = detect_type(result["frase_corrigida"], result["negacao"])
+
+        sentiment = analyze_sentiment(doc)
+        result["polaridade"] = sentiment.get("polaridade", "")
+        result["emocao_texto"] = sentiment.get("emocao", "")
+
+        print("\n--- RESULTADO ---\n")
+
+        for key, value in result.items():
+            if isinstance(value, bool):
+                if not value:
+                    continue
+            else:
+                if not value:
+                    continue
+
+            print(f"{key}: {value}")
+
+        if source != 'keyboard':
+            break
 
 if __name__ == "__main__":
     main()
