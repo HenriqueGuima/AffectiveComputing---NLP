@@ -4,6 +4,10 @@ import queue
 import json
 import sounddevice as sd
 from vosk import Model, KaldiRecognizer
+import warnings
+warnings.filterwarnings("ignore")
+
+from voice.emotionRecognizer import analisar_emocao
 
 audio_queue = queue.Queue()
 
@@ -29,18 +33,33 @@ def get_audio_input():
         print("\n[VOSK LOCAL] A escutar... Fala agora.")
 
         # Inicia a captura do fluxo de áudio bruto
-        with sd.RawInputStream(samplerate=16000, blocksize=8000, dtype='int16',
+        with sd.RawInputStream(samplerate=16000, blocksize=16000, dtype='int16',
                                channels=1, callback=callback):
             
+            # (Dentro do loop do seu get_audio_input)
+            buffer_frase = [] # Lista para guardar o áudio da frase atual
+
             while True:
                 data = audio_queue.get()
+                buffer_frase.append(data) # Acumula o áudio
+                
                 if recognizer.AcceptWaveform(data):
-                    # Extrai o texto do JSON retornado pelo Vosk
                     result = json.loads(recognizer.Result())
-                    text = result.get("text", "")
-                    if text:
-                        print(f"Transcrição Local: {text}")
-                        return text 
+                    texto = result.get("text", "")
+                    
+                    if texto:
+                        # Juntar o buffer de áudio num único bloco de bytes
+                        audio_completo = b''.join(buffer_frase)
+                        
+                        # Analisar a emoção desse bloco
+                        emocao = analisar_emocao(audio_completo)
+                        
+                        print(f"Texto: {texto}")
+                        print(f"Sentimento: {emocao}")
+                        
+                        buffer_frase = []
+                        
+                        return texto 
                 
     except Exception as e:
         print(f"Erro no processamento de áudio local: {e}")
