@@ -111,7 +111,7 @@ def analyze_sentiment(doc) -> Dict[str, str]:
             emocao = "alegria"
         else:
             # Caso positivo sem pista clara
-            emocao = "alegria"
+            emocao = "neutro"
     elif polaridade == "negativo":
         if emotion_counts["tristeza"] > 0:
             emocao = "tristeza"

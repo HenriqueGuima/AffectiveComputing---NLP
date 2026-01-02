@@ -36,7 +36,7 @@ def get_audio_input():
         with sd.RawInputStream(samplerate=16000, blocksize=16000, dtype='int16',
                                channels=1, callback=callback):
             
-            # (Dentro do loop do seu get_audio_input)
+            # (Dentro do loop do get_audio_input)
             buffer_frase = [] # Lista para guardar o áudio da frase atual
 
             while True:
@@ -80,16 +80,18 @@ def get_text_input():
         if opcao in {":q", "q"}:
             return ":q", 'keyboard'
 
-        # Re-pedir se não for dígito
+        # Pedir de novo se não for dígito
         if not opcao.isdigit():
             print("Opção inválida. Por favor, introduza 1 ou 2.")
             continue
 
         if opcao == '2':
             resultado = get_audio_input()
-            # Se falhar a voz, cai para o teclado como backup
+
+            # Fallback to keyboard
             if not resultado:
                 return input("\n\nFalha na voz. Introduza via teclado: "), 'keyboard'
+            
             return resultado, 'microfone'
         elif opcao == '1':
             return input("Introduza uma frase: "), 'keyboard'

@@ -1,3 +1,5 @@
+import re
+
 PERSONAL_TOKENS = {
     "eu", "me", "meu",
     "ativado",
@@ -6,13 +8,13 @@ PERSONAL_TOKENS = {
     "dormi", "liguei", "investiguei", "fico", "nasci", "quero", "-me"
 }
 
-PERSONAL_PHRASES = {
-    "eu gravo", "eu noto", "eu amo", "eu aprecio", "eu termino"
-}
+# Match "eu <word>" where the word is letters only
+PERSONAL_PHRASES = re.compile(r'\beu\s+[^\W\d_]+\b', re.IGNORECASE | re.UNICODE)
 
 def is_personal(doc):
     text_lower = doc.text.lower()
-    if any(phrase in text_lower for phrase in PERSONAL_PHRASES):
+
+    if PERSONAL_PHRASES.search(text_lower):
         return True
     return any(token.text.lower() in PERSONAL_TOKENS for token in doc)
 
