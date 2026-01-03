@@ -5,8 +5,8 @@ from nlp.semantics import is_personal
 from nlp.type import detect_type
 from nlp.sentiment import analyze_sentiment
 
-from core.audio_input import get_text_input
 from core.result import empty_result
+from ui.input_controller import select_input
 
 def main():
     first_run = True
@@ -21,7 +21,7 @@ def main():
 
         first_run = False
 
-        text, source = get_text_input()
+        text, source = select_input()
 
         if isinstance(text, str) and text.strip() == ':q' or (not text):
             print("\n A sair...\n")
@@ -53,9 +53,6 @@ def main():
                     continue
 
             print(f"{key}: {value}")
-
-        if source != 'keyboard':
-            break
 
 if __name__ == "__main__":
     main()

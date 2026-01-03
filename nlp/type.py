@@ -10,6 +10,9 @@ def detect_type(text: str, negation: bool) -> str:
 
     if text.endswith("?"):
         return "pergunta"
+    
+    if any(lower.startswith(q) for q in QUESTION_WORDS):
+        return "pergunta"
 
     if "!" in text:
         return "exclamacao"
