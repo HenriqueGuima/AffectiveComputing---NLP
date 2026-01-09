@@ -5,6 +5,8 @@ from nlp.semantics import is_personal
 from nlp.type import detect_type
 from nlp.sentiment import analyze_sentiment
 
+from nlp.dialetos import identificar_dialeto
+
 from core.result import empty_result
 from ui.input_controller import select_input
 
@@ -41,6 +43,10 @@ def main():
         sentiment = analyze_sentiment(doc)
         result["polaridade"] = sentiment.get("polaridade", "")
         result["emocao_texto"] = sentiment.get("emocao", "")
+
+        dialeto = identificar_dialeto(text)
+        result["dialeto"] = dialeto
+
 
         print("\n--- RESULTADO ---\n")
 

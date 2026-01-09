@@ -7,5 +7,6 @@ def empty_result():
         "polaridade": "",
         "emocao_texto": "",
         "emocao_voz": "",
-        "emocao_final": ""
+        "emocao_final": "",
+        "dialeto": ""
     }
