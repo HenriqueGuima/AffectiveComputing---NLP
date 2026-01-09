@@ -1,224 +1,47 @@
 import re
 
 DIALETOS = {
-    "NORTE": {
-        "baca": "vaca", "binho": "vinho", "bassoura": "vassoura", "beber": "beber",
-        "sapatilhas": "ténis", 
-        "fino": "imperial", 
-        "sertã": "frigideira",
-        "tacho": "panela",
-        # Dia a dia e Objetos
-        "laurear a pevide": "passear",
-        "briol": "frio",
-        "dia de pico boi": "dia de trabalho",
-        "foguete nas meias": "buraco nas meias",
-        "patavina": "nada",
-        "arreganhar a taxa": "rir",
-        "esbardalhar": "cair",
-        "aloquete": "cadeado",
-        "alapar": "sentar",
-        "bitaites": "palpites",
-        "amarfanhar": "espremer",
-        "vergar a mola": "trabalhar muito",
-        "dar de frosques": "ir embora",
-        "bicha": "fila",
-        "estar com o toco": "mal-humorado",
-        "breca": "cãibra",
-        "jeco": "cão",
-        "carago": "interjeição",
-        "adiantar um grosso": "inútil",
-        "andar de cu tremido": "andar de carro",
-        "bolinha pinchona": "bolinha saltitona",
-        "lapada": "estalo",
-        "chamar o gregorio": "vomitar",
-        "comer o caco": "confundir",
-
-        # 'Insultos' e 'Bocas' (Deteção de tom)
-        "lampeira": "vaidosa",
-        "vai no batalha": "mentira",
-        "armar ao pingarelho": "exibir-se",
-        "vai me a loja": "nao me chateies",
-        "broeiro": "rude",
-        "acordar de cu pro ar": "mal-disposto",
-        "arrotar postas de pescada": "gabar-se",
-        "andor violeta": "vai-te embora",
-
-        # Comer e Beber
-        "estrugido": "refogado",
-        "encher a mula": "comer muito",
-        "fino": "imperial",
-        "pneu": "agua das pedras com limao",
-        "surbia": "cerveja",
-        "molete": "pao",
-
-        # Morte (ou fim de algo)
-        "ir de vela": "acabou",
-        "esticou o pernil": "morreu",
-        "bater a cacoleta": "morreu",
-        "foi fazer tijolos": "morreu"
-        
-    },
-    "CENTRO": {
-        "imperial": "fino",
-        "sertã": "frigideira",
-        "cruzeta": "cabide",
-        "testo": "tampa",
-        # Vocabulário Específico
-        "jaco": "caixote do lixo",
-        "langao": "preguiçoso",
-        "lafogao": "comilão",
-        "cachopo": "rapaz",
-        "cachopa": "rapariga",
-        "gazeteiro": "falta as aulas",
-        "chafariz": "fonte",
-        "alpendre": "varanda",
-        
-        # Beira Interior
-        "quebra": "falir",
-        "quebrada": "encosta",
-        "quelha": "viela",
-        "rilhada": "jogo local",
-        "sobrado": "sotao",
-        "sopapada": "bofetada",
-        "tonho": "vadio",
-        "tortulho": "desajeitado",
-        "vintaneira": "vento",
-
-        # Expressões e Frases
-        "filho da parva do tovinho": "expressao de desaprovacao",
-        "chatear o camoes": "incomodar",
-        "encher a mula": "comer muito",
-        "fino": "imperial",
-        "pneu": "agua das pedras com limao",
-        "surbia": "cerveja",
-        "molete": "pao",
-        
-        # Marcadores de intensidade (Úteis para o NLP entender o sentimento)
-        "fixe": "bom",
-        "bue": "muito"
-    },
-    "SUL": {
-        "marafado": "irritado",
-        "bianda": "comida",
-        "moce": "rapaz",
-        "atarracar": "apertar",
-        "abicar": "aproximar",
-        # Vocabulário e Objetos
-        "serta": "frigideira",
-        "serreiro": "natural da serra",
-        "marafado": "irritado ou trapaceiro",
-        "marafada": "irritada ou trapaceira",
-        "sostra": "preguiçoso",
-        "cua": "gordo",
-        "quina": "esquina",
-        "quelha": "viela",
-        "quebra": "falir",
-
-        # Termos de Cheiro (O Vosk pode ter dificuldade aqui, são ótimos para o dicionário)
-        "pexum": "cheiro a peixe",
-        "cansum": "cheiro a cao",
-        "sovacum": "cheiro a axila",
-        "bedum": "mau cheiro",
-
-        # Expressões de Intensidade/Espanto
-        "ma que jete": "que espanto",
-        "bem que me": "expressao de intensidade",
-        
-        # Bebidas e Comida (O contraste clássico)
-        "imperial": "cerveja", # O marcador definitivo do Sul
-        "refogado": "estrugido",
-        "frigideira": "serta",
-
-        # Diminutivos (Para o teu NLP ignorar o sufixo e focar no radical)
-        "canito": "cao",
-        "gateco": "gato"
-    },
-    "MADEIRA": {
-        "semilha": "batata",
-        "semelha": "batata",
-        "balcão": "esplanada",
-        "bujarda": "mentira",
-        "ventoinha": "ventilador",
-        "vizinhança": "vizinhos",
-        # Objetos e Casa
-        "adufa": "janela ou portinhola",
-        "alcepas": "alicerce",
-        "chavelha": "peça de carro de bois / pessoa teimosa",
-        "xavelha": "peça de carro de bois",
-        "tratuario": "passeio", # O Vosk vai ouvir 'tratuário' e não 'trotuário'
-        "tenerifa": "renda tipica",
-        "afenafe": "rapidez ou energia",
-
-        # Comida e Natureza
-        "semilha": "batata", # O marcador mais importante da Madeira
-        "alendros": "tremoços",
-        "alhendros": "tremoços",
-        "alindres": "tremoços",
-        "massapez": "terreno argiloso",
-        "borracheiro": "fabricante de odres / planta",
-        "gamesse": "tipo de planta/erva",
-
-        # Pessoas e Comportamentos
-        "aboseirar": "sentar ou descansar",
-        "bilhardeira": "fofoqueira",
-        "buzico": "criança pequena",
-        "chimeco": "pessoa de baixa estatura",
-        "chorrica": "pessoa fraca ou chorona",
-        "cigarrinho": "pessoa magra ou cigarro pequeno",
-        "mamulhao": "grande quantidade ou amontoado",
-        "mamulho": "amontoado",
-        "modilho": "maneira ou feitio",
-        "noveiro": "pessoa que faz intrigas",
-        "rebendita": "teimosia ou picardia",
-        "rijeiras": "força ou resistencia",
-        "roeza": "vontade de comer ou roer",
-        
-        # Diversos
-        "apilhagem": "ajuntamento ou pilha"
-    },
-    "ACORES": {
-        "quarteirão": "bloco de casas",
-        "alagoa": "lagoa",
-        "amanhar": "preparar",
-        "galheta": "estalo",
-        "beberes": "bebidas",
-        # Influência do Inglês (Crucial para o Vosk não baralhar)
-        "alvaros": "macacao", # De 'overall'
-        "alvarozes": "macacao",
-        "clauseta": "armario", # De 'closet'
-        "gama": "pastilha elastica", # De 'gum'
-        "suera": "camisola", # De 'sweater'
-        "froca": "casaco", # De 'frock coat'
-        "calafona": "California", # Referência ao estado americano
-
-        # Vocabulário Local e Expressões
-        "briança": "criança", # Variação fonética comum
-        "destarelado": "pessoa que fala muito / tonto",
-        "enticar": "implicar",
-        "intenicar": "implicar / provocar",
-        "estapagado": "parvo / tonto",
-        "fominha negra": "fome extrema",
-        "gaitada": "risada",
-        "gaitadaria": "muitas risadas",
-        "maroiço": "monte de pedras",
-        "marrolho": "mar agitado",
-        "tarelo": "juízo / conversa",
-        "rebendita": "vingança / teimosia",
-        
-        # Animais e Natureza
-        "besuga": "besugo (peixe)",
-        "enxareu": "peixe enxareu",
-        "gueixo": "bezerro / vitelo",
-        "lapujo": "sujidade de lapa",
-        "musgao": "musgo grande",
-        "piteiro": "tipo de planta / agave",
-        
-        # Outros
-        "bagoucho": "pedaço pequeno",
-        "belica": "pequena porção de algo",
-        "bailinho": "dança típica",
-        "rapexim": "natural de Rabo de Peixe"
-    }
+    "NORTE": [
+        "baca", "binho", "bassoura", "beber", "sapatilhas", "fino", "sertã", "tacho",
+        "laurear a pevide", "briol", "dia de pico boi", "foguete nas meias", "patavina",
+        "arreganhar a taxa", "esbardalhar", "aloquete", "alapar", "bitaites", "amarfanhar",
+        "vergar a mola", "dar de frosques", "bicha", "estar com o toco", "breca", "jeco",
+        "carago", "adiantar um grosso", "andar de cu tremido", "bolinha pinchona",
+        "lapada", "chamar o gregorio", "comer o caco", "lampeira", "vai no batalha",
+        "armar ao pingarelho", "vai me a loja", "broeiro", "acordar de cu pro ar",
+        "arrotar postas de pescada", "andor violeta", "estrugido", "encher a mula",
+        "fino", "pneu", "surbia", "molete", "ir de vela", "esticou o pernil",
+        "bater a cacoleta", "foi fazer tijolos"
+    ],
+    "CENTRO": [
+        "imperial", "sertã", "cruzeta", "testo", "jaco", "langao", "lafogao",
+        "cachopo", "cachopa", "gazeteiro", "chafariz", "alpendre", "quebra",
+        "quebrada", "quelha", "rilhada", "sobrado", "sopapada", "tonho",
+        "tortulho", "vintaneira", "filho da parva do tovinho", "chatear o camoes",
+        "encher a mula", "fino", "pneu", "surbia", "molete", "fixe", "bue"
+    ],
+    "SUL": [
+        "marafado", "bianda", "moce", "atarracar", "abicar", "serta", "serreiro",
+        "marafado", "marafada", "sostra", "cua", "quina", "quelha", "quebra",
+        "pexum", "cansum", "sovacum", "bedum", "ma que jete", "bem que me",
+        "imperial", "refogado", "frigideira", "canito", "gateco"
+    ],
+    "MADEIRA": [
+        "semilha", "semelha", "balcão", "bujarda", "ventoinha", "vizinhança",
+        "adufa", "alcepas", "chavelha", "xavelha", "tratuario", "tenerifa",
+        "afenafe", "semilha", "alendros", "alhendros", "alindres", "massapez",
+        "borracheiro", "gamesse", "aboseirar", "bilhardeira", "buzico", "chimeco",
+        "chorrica", "cigarrinho", "mamulhao", "mamulho", "modilho", "noveiro",
+        "rebendita", "rijeiras", "roeza", "apilhagem"
+    ],
+    "ACORES": [
+        "quarteirão", "alagoa", "amanhar", "galheta", "beberes", "alvaros",
+        "alvarozes", "clauseta", "gama", "suera", "froca", "calafona", "briança",
+        "destarelado", "enticar", "intenicar", "estapagado", "fominha negra",
+        "gaitada", "gaitadaria", "maroiço", "marrolho", "tarelo", "rebendita",
+        "besuga", "enxareu", "gueixo", "lapujo", "musgao", "piteiro", "bagoucho",
+        "belica", "bailinho", "rapexim"
+    ]
 }
 
 def identificar_dialeto(frase):
@@ -232,7 +55,7 @@ def identificar_dialeto(frase):
     scores = {regiao: 0 for regiao in DIALETOS.keys()}
 
     for regiao, termos in DIALETOS.items():
-        for termo in termos.keys():
+        for termo in termos:
             t_busca = termo.lower().strip()
             if t_busca in texto_input:
                 pattern = r'\b' + re.escape(t_busca) + r'\b'
@@ -243,6 +66,7 @@ def identificar_dialeto(frase):
     print(f"Pontuação final: {scores}")
     
     regiao_vencedora = max(scores, key=scores.get)
+    
     if scores[regiao_vencedora] == 0:
         return "PADRÃO"
 
