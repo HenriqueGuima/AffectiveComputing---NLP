@@ -3,13 +3,6 @@ from spellchecker import SpellChecker
 
 spell = SpellChecker(language="pt")
 
-# Added new logic
-# Now the final ponctuation is added in the end of the sentence
-import re
-from spellchecker import SpellChecker
-
-spell = SpellChecker(language="pt")
-
 def correct_text(text):
     tokens = re.findall(r"\w+|[^\w\s]", text, re.UNICODE)
     corrected_tokens = []
