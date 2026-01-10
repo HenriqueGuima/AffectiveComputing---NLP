@@ -63,7 +63,6 @@ def get_audio_input(max_seconds: float = 10.0):
             buffer_frase = []
 
             while True:
-                # timeout to break the loop
                 if (time.time() - start_time) > max_seconds:
                     print("\n[INFO] Timeout atingido.")
                     return _process_result(recognizer, buffer_frase)

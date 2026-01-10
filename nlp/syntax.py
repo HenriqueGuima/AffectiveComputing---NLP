@@ -16,7 +16,6 @@ def _ensure_nlp():
 
 
 def parse(text):
-    """Return a spaCy Doc for the given text (used by main, negation, semantics)."""
     return _ensure_nlp()(text)
 
 

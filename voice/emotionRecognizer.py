@@ -15,9 +15,7 @@ model = Wav2Vec2ForSequenceClassification.from_pretrained(MODEL_NAME,local_files
 model.gradient_checkpointing_enable() 
 
 def analisar_emocao(audio_bytes):
-    """
-    Recebe os bytes de áudio (do sounddevice), converte e prediz a emoção.
-    """
+
     try:
         audio_int16 = np.frombuffer(audio_bytes, dtype=np.int16)
         audio_float = audio_int16.astype(np.float32) / 32768.0

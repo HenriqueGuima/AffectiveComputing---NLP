@@ -2,15 +2,15 @@ import re
 
 DIALETOS = {
     "NORTE": [
-        "baca", "binho", "bassoura", "beber", "sapatilhas", "fino", "sertã", "tacho",
+        "baca", "binho", "bassoura", "sapatilhas", "fino", "sertã", "tacho",
         "laurear a pevide", "briol", "dia de pico boi", "foguete nas meias", "patavina",
         "arreganhar a taxa", "esbardalhar", "aloquete", "alapar", "bitaites", "amarfanhar",
         "vergar a mola", "dar de frosques", "bicha", "estar com o toco", "breca", "jeco",
         "carago", "adiantar um grosso", "andar de cu tremido", "bolinha pinchona",
         "lapada", "chamar o gregorio", "comer o caco", "lampeira", "vai no batalha",
         "armar ao pingarelho", "vai me a loja", "broeiro", "acordar de cu pro ar",
-        "arrotar postas de pescada", "andor violeta", "estrugido", "encher a mula",
-        "fino", "pneu", "surbia", "molete", "ir de vela", "esticou o pernil",
+        "arrotar postas de pescada", "andor violeta", "estrugido", "encher a mula"
+        , "surbia", "molete", "ir de vela", "esticou o pernil",
         "bater a cacoleta", "foi fazer tijolos"
     ],
     "CENTRO": [
@@ -18,7 +18,7 @@ DIALETOS = {
         "cachopo", "cachopa", "gazeteiro", "chafariz", "alpendre", "quebra",
         "quebrada", "quelha", "rilhada", "sobrado", "sopapada", "tonho",
         "tortulho", "vintaneira", "filho da parva do tovinho", "chatear o camoes",
-        "encher a mula", "fino", "pneu", "surbia", "molete", "fixe", "bue"
+        "encher a mula", "surbia", "molete", "fixe", "bue"
     ],
     "SUL": [
         "marafado", "bianda", "moce", "atarracar", "abicar", "serta", "serreiro",
@@ -44,30 +44,47 @@ DIALETOS = {
     ]
 }
 
+REGRAS_CONTEXTO = {
+    "fino": [r"mais fino", r"muito fino", r"tão fino", r"extremamente fino", r"esta fino", r"mesmo fino"],
+    "bicha": [r"bicha do cabelo", r"bicha de água", r"bicha de luz"],
+    "patavina": [r"não percebo patavina", r"nem patavina"],
+    "sertã": [r"cidade de sertã", r"vila de sertã", r"em sertã"],
+    "imperial": [r"hotel imperial", r"palácio imperial", r"estilo imperial", r"império", r"imperialismo"],
+    "sobrado": [r"sobrado de madeira", r"sobrado técnico"],
+    "refogado": [r"base de refogado", r"refogado clássico", r"refogado tradicional"],
+    "balcão": [r"balcão de atendimento", r"balcão de cozinha", r"balcão comercial"],
+    "borracheiro": [r"oficina", r"pneu", r"automóvel"],
+    "amanhar": [r"amanhar peixe", r"amanhar carne"],
+    "gama": [r"gama de produtos", r"alta gama"],
+}
+
+
 def identificar_dialeto(frase):
     texto_input = str(frase).lower().strip()
+    texto_processado = re.sub(r'[^\w\s]', '', texto_input)
     
-    texto_input = re.sub(r'[^\w\s]', '', texto_input)
-    
-    print(f"\n--- DEBUG DIALETO ---")
-    print(f"Frase processada: '{texto_input}'")
-
     scores = {regiao: 0 for regiao in DIALETOS.keys()}
 
     for regiao, termos in DIALETOS.items():
-        for termo in termos:
+        for termo in set(termos):
             t_busca = termo.lower().strip()
-            if t_busca in texto_input:
-                pattern = r'\b' + re.escape(t_busca) + r'\b'
-                if re.search(pattern, texto_input):
-                    scores[regiao] += 1
-                    print(f"MATCH: '{termo}' encontrado em {regiao}")
-
-    print(f"Pontuação final: {scores}")
+            pattern = r'\b' + re.escape(t_busca) + r'\b'
+            
+            if re.search(pattern, texto_processado):
+                is_contexto_errado = False
+                if t_busca in REGRAS_CONTEXTO:
+                    for excecao in REGRAS_CONTEXTO[t_busca]:
+                        if re.search(excecao, texto_processado):
+                            is_contexto_errado = True
+                            break
+                
+                if not is_contexto_errado:
+                    scores[regiao] += 1  
     
-    regiao_vencedora = max(scores, key=scores.get)
+    regioes_ordenadas = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    vencedor, pontuacao = regioes_ordenadas[0]
     
-    if scores[regiao_vencedora] == 0:
+    if pontuacao == 0:
         return "PADRÃO"
 
-    return regiao_vencedora
+    return vencedor
