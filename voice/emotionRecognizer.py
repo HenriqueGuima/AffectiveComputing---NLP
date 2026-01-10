@@ -1,14 +1,17 @@
 import torch
 import numpy as np
 import librosa
-from transformers import Wav2Vec2ForSequenceClassification, Wav2Vec2FeatureExtractor
+from transformers import Wav2Vec2FeatureExtractor, Wav2Vec2ForSequenceClassification
 import warnings
 warnings.filterwarnings("ignore")
 
-MODEL_NAME = "superb/wav2vec2-base-superb-er"
+MODEL_NAME = "./model_emotion/"
 
-feature_extractor = Wav2Vec2FeatureExtractor.from_pretrained(MODEL_NAME)
-model = Wav2Vec2ForSequenceClassification.from_pretrained(MODEL_NAME)
+feature_extractor = Wav2Vec2FeatureExtractor.from_pretrained(
+    MODEL_NAME, 
+    local_files_only=True
+)
+model = Wav2Vec2ForSequenceClassification.from_pretrained(MODEL_NAME,local_files_only=True)
 model.gradient_checkpointing_enable() 
 
 def analisar_emocao(audio_bytes):
