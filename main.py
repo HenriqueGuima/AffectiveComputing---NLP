@@ -1,7 +1,7 @@
 from preprocessing.spellcheck import correct_text
 from nlp.syntax import parse
 from nlp.negation import has_negation
-from nlp.semantics import is_personal
+from nlp.semantics import is_personal, is_factual
 from nlp.type import detect_type
 from nlp.sentiment import analyze_sentiment
 
@@ -37,8 +37,18 @@ def main():
         doc = parse(corrected)
 
         result["negacao"] = has_negation(doc)
-        result["pessoal"] = is_personal(doc)
-        result["tipo"] = detect_type(result["frase_corrigida"], result["negacao"])
+        
+        pessoal = is_personal(doc)
+        factual = is_factual(doc)
+        
+        tipo_base = detect_type(result["frase_corrigida"], result["negacao"])
+        
+        if pessoal:
+            result["tipo"] = f"{tipo_base} (pessoal)"
+        elif factual:
+            result["tipo"] = f"{tipo_base} (factual)"
+        else:
+            result["tipo"] = tipo_base
 
         sentiment = analyze_sentiment(doc)
         result["polaridade"] = sentiment.get("polaridade", "")
