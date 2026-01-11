@@ -1,8 +1,24 @@
 ### CREATE ENVIRONMENT ###
+
+# Visual Sudio Code
+
+# 1) Ir para o main.py script e Clicar no canto inferior direito onde diz a versao do Python 
+# 2) Create Virtual Environment
+# 3) Venv , Criar um .venv environment
+# 4) Escolher python version (3.12)
+# 5) Escolher dependencies para instalar do requirements,txt
+# 6) Pronto!
+
+############
+
 ## Use python 3.12 ##
+
+# 1)
+
 python -m venv venv
 source venv/bin/activate
 
+# 2)
 ### INSTALL PACKAGES ###
 pip install -r requirements.txt
 
@@ -10,6 +26,7 @@ pip install -r requirements.txt
 
 pip install spacy nltk scikit-learn numpy pandas librosa vosk rapidfuzz transformers torch
 
+# 3)
 ### INSTALL PT MODEL ###
 python -m spacy download pt_core_news_lg
 
