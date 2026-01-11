@@ -7,8 +7,8 @@ import sounddevice as sd
 from vosk import Model, KaldiRecognizer
 import warnings
 warnings.filterwarnings("ignore")
-
 from voice.emotionRecognizer import analisar_emocao
+
 
 audio_queue = queue.Queue()
 
@@ -36,6 +36,7 @@ def _process_result(recognizer, buffer_frase, texto=""):
 
     return texto
 
+# Configura o microfone, carrega o modelo Vosk e ouve o utilizador
 def get_audio_input(max_seconds: float = 10.0):
     base_path = os.path.dirname(__file__)
     model_path = os.path.join(base_path, "model")
@@ -63,13 +64,16 @@ def get_audio_input(max_seconds: float = 10.0):
             buffer_frase = []
 
             while True:
+                # Verifica se o tempo limite foi atingido
                 if (time.time() - start_time) > max_seconds:
                     print("\n[INFO] Timeout atingido.")
                     return _process_result(recognizer, buffer_frase)
-
+                
+                # Obtém os dados de áudio
                 data = audio_queue.get()
                 buffer_frase.append(data)
 
+                # AcceptWaveform retorna True quando deteta uma pausa/fim da frase
                 if recognizer.AcceptWaveform(data):
                     result = json.loads(recognizer.Result())
                     texto = result.get("text", "").strip()

@@ -8,7 +8,7 @@ PERSONAL_TOKENS = {
     "dormi", "liguei", "investiguei", "fico", "nasci", "quero", "-me"
 }
 
-# Match "eu <word>" where the word is letters only
+# Corresponde a "eu <palavra>" onde a palavra contém apenas letras
 PERSONAL_PHRASES = re.compile(r'\beu\s+[^\W\d_]+\b', re.IGNORECASE | re.UNICODE)
 
 def is_personal(doc):

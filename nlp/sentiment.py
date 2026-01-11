@@ -3,33 +3,51 @@ from typing import Dict
 from nlp.syntax import parse
 from nlp.negation import NEGATIONS
 
-# TODO expandir com SentiLex-PT/OpLexicon ou dicionários próprios.
 POSITIVE = {
     "feliz", "felizmente", "alegre", "alegria", "bom", "boa", "melhor",
     "positivo", "sucesso", "gostar", "adorar", "conseguir", "aprovar", "aprovado",
-    "conforto", "sorriso", "ótimo", "otimo", "excelente", "parabéns", "parabens"
+    "conforto", "sorriso", "ótimo", "otimo", "excelente", "parabens",
+    "incrível", "espetacular", "maravilhoso", "ganhar", "vencer", "benefício",
+    "recomendar", "fácil", "rápido", "útil", "seguro", "confiança", "obrigado",
+    "gratidão", "perfeito", "produtivo", "entusiasmado", "animado", "estupendo"
 }
 
 NEGATIVE = {
     "triste", "infelizmente", "raiva", "medo", "nojo", "má", "mau", "pior",
     "negativo", "falhar", "falhou", "chumbar", "chumbaram", "chumbou", "erros",
-    "odiar", "problema", "dor", "mal", "péssimo", "pessimo"
+    "odiar", "problema", "dor", "mal", "péssimo", "pessimo", "terrível", 
+    "horrível", "defeito", "difícil", "lento", "inútil", "inseguro", "perigo",
+    "culpar", "reclamar", "desastre", "crise", "sofrer", "prejuízo", "ruim",
+    "atraso", "confusão", "irritante", "vergonha", "desilusão", "frustração", "matar", "morte", "farto"
 }
 
 INTENSIFIERS = {
     "muito": 1.5,
     "bastante": 1.3,
     "demais": 1.4,
-    "pouco": 0.5
+    "extremamente": 1.8,
+    "completamente": 1.6,
+    "totalmente": 1.6,
+    "imensamente": 1.7,
+    "pouco": 0.5,
+    "ligeiramente": 0.7,
+    "quase": 0.8,
+    "apenas": 0.9
 }
 
 EMOTION_HINTS = {
-    "alegria": {"feliz", "felizmente", "alegre", "alegria", "sorriso", "ótimo", "otimo", "excelente"},
-    "tristeza": {"triste", "infelizmente", "chorar", "choro"},
-    "raiva": {"raiva", "irritado", "zangado"},
-    "medo": {"medo", "assustado", "receio"},
-    "nojo": {"nojo", "repulsa"},
-    "surpresa": {"surpreendido", "surpresa"}
+    "alegria": {"feliz", "felizmente", "alegre", "alegria", "sorriso", "ótimo", "otimo", 
+        "excelente", "maravilhoso", "entusiasmo", "celebrar", "rir", "contente"},
+    "tristeza": {"triste", "infelizmente", "chorar", "choro", "luto", "melancolia", 
+        "sozinho", "abandonado", "desânimo", "deprimido", "mágoa"},
+    "raiva": {"raiva", "irritado", "zangado", "fúria", "ódio", "detestar", 
+        "insuportável", "agressivo", "indignado", "nervoso", "matar", "morrer", "bater", "destruir"},
+    "medo": {"medo", "assustado", "receio", "pânico", "terror", "ameaça", 
+        "ansioso", "preocupado", "pavor", "tremendo"},
+    "nojo": {"nojo", "repulsa", "asco", "nojento", "repugnante", "asqueroso", 
+        "nauseabundo", "desprezo"},
+    "surpresa": {"surpreendido", "surpresa", "espanto", "incrível", "inesperado", 
+        "choque", "admirado", "pasmo", "estupefacto"}
 }
 
 
@@ -40,10 +58,8 @@ def _token_stream(doc):
 
 def analyze_sentiment(doc) -> Dict[str, str]:
     """
-    Analisa sentimento simples baseado em léxico e regras:
     - Polaridade: positivo/negativo/neutro
     - Emoção de texto: alegria/tristeza/raiva/medo/nojo/surpresa/neutro
-    Considera negações locais (janela curta), intensificadores e pistas lexicais.
     """
     score = 0.0
     emotion_counts: Dict[str, int] = {k: 0 for k in EMOTION_HINTS.keys()}
@@ -129,8 +145,3 @@ def analyze_sentiment(doc) -> Dict[str, str]:
 
     return {"polaridade": polaridade, "emocao": emocao}
 
-
-if __name__ == "__main__":
-    # Test
-    doc = parse("Felizmente não chumbaram todos os alunos")
-    print(analyze_sentiment(doc))

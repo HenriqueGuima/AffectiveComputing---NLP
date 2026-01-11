@@ -44,6 +44,7 @@ DIALETOS = {
     ]
 }
 
+# Ve o contexto destas certas palavras expecificas , o que pode mudar o seu significado
 REGRAS_CONTEXTO = {
     "fino": [r"mais fino", r"muito fino", r"tão fino", r"extremamente fino", r"esta fino", r"mesmo fino"],
     "bicha": [r"bicha do cabelo", r"bicha de água", r"bicha de luz"],
@@ -63,15 +64,22 @@ def identificar_dialeto(frase):
     texto_input = str(frase).lower().strip()
     texto_processado = re.sub(r'[^\w\s]', '', texto_input)
     
+    # Inicializar o contador de pontuação
     scores = {regiao: 0 for regiao in DIALETOS.keys()}
+
 
     for regiao, termos in DIALETOS.items():
         for termo in set(termos):
             t_busca = termo.lower().strip()
+
+            # Criar um padrão Regex que garante que a palavra é exata 
             pattern = r'\b' + re.escape(t_busca) + r'\b'
             
+            # Verificar se a palavra regional existe na frase
             if re.search(pattern, texto_processado):
                 is_contexto_errado = False
+
+                # Verificação de Regras de Contexto
                 if t_busca in REGRAS_CONTEXTO:
                     for excecao in REGRAS_CONTEXTO[t_busca]:
                         if re.search(excecao, texto_processado):
@@ -81,6 +89,7 @@ def identificar_dialeto(frase):
                 if not is_contexto_errado:
                     scores[regiao] += 1  
     
+    # Ordena as regiões pela pontuação
     regioes_ordenadas = sorted(scores.items(), key=lambda x: x[1], reverse=True)
     vencedor, pontuacao = regioes_ordenadas[0]
     
