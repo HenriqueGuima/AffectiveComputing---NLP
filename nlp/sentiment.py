@@ -18,7 +18,7 @@ NEGATIVE = {
     "odiar", "problema", "dor", "mal", "péssimo", "pessimo", "terrível", 
     "horrível", "defeito", "difícil", "lento", "inútil", "inseguro", "perigo",
     "culpar", "reclamar", "desastre", "crise", "sofrer", "prejuízo", "ruim",
-    "atraso", "confusão", "irritante", "vergonha", "desilusão", "frustração", "matar", "morte", "farto"
+    "atraso", "confusão", "irritante", "vergonha", "desilusão", "frustração", "matar", "morte", "farto" , "infelizmente"
 }
 
 INTENSIFIERS = {
@@ -50,6 +50,7 @@ EMOTION_HINTS = {
         "choque", "admirado", "pasmo", "estupefacto"}
 }
 
+INHERENT_POLARITY = {"infelizmente", "felizmente", "ótimo", "péssimo", "terrível", "horrível"}
 
 def _token_stream(doc):
     for token in doc:
@@ -96,13 +97,15 @@ def analyze_sentiment(doc) -> Dict[str, str]:
 
         # Aplicar negação local
         if negate_window > 0 and token_score != 0.0:
-            token_score *= -1.0
+            if text not in INHERENT_POLARITY:
+                token_score *= -1.0
+            negate_window -= 1
+        elif negate_window > 0:
             negate_window -= 1
 
         # Aplicar intensificador
         if token_score != 0.0:
             token_score *= intensifier
-            # Depois de aplicar, regressar o intensificador ao normal
             intensifier = 1.0
 
         score += token_score
@@ -113,9 +116,9 @@ def analyze_sentiment(doc) -> Dict[str, str]:
                 emotion_counts[emo] += 1
 
     # Determinar polaridade
-    if score > 0.25:
+    if score > 0.5:
         polaridade = "positivo"
-    elif score < -0.25:
+    elif score < -0.5:
         polaridade = "negativo"
     else:
         polaridade = "neutro"
