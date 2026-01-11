@@ -12,3 +12,7 @@ pip install spacy nltk scikit-learn numpy pandas librosa vosk rapidfuzz transfor
 
 ### INSTALL PT MODEL ###
 python -m spacy download pt_core_news_lg
+
+### INSTALL git-lfs IF NEEDED ###
+sudo apt install git-lfs
+git lfs pull
